@@ -51,8 +51,7 @@ um Arduino e uma ESP8266. Uma sugestão seria a migração para um único
 ESP32, pois reduziria a complexidade e o custo.
 
 Além disso, os autores não discutem limitações de escalabilidade nem
-como o sistema reage a ruído elétrico em medições contínuas. Minha
-dúvida aos autores seria justamente como o método se comporta em
+como o sistema reage a ruído elétrico em medições contínuas, pois uma das maiores questões com seria como o método se comporta em
 cenários reais com cargas variáveis e interferência eletromagnética
 típica de ambientes domésticos.
 
