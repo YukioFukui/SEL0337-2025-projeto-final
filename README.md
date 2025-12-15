@@ -78,7 +78,7 @@ da internet.
 
 Os autores também não analisam a latência da comunicação em nuvem, ponto
 relevante porque o sistema depende da internet até para ações simples.
-Minha pergunta aos autores seria como o smart plug se comporta em
+Uma das principais dúvidas seria como o smart plug se comportaria em
 situações de perda ou instabilidade de conexão, já que isso impacta
 diretamente a usabilidade do dispositivo.
 
