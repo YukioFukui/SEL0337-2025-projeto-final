@@ -187,7 +187,8 @@ linear ou tradicional, onde um delay de *debounce* no botão travaria
 todo o sistema, a abordagem com Tasks permitiu que o sistema continuasse
 responsivo e operando em paralelo nos dois núcleos da ESP32.
 
-# Código Fonte do Firmware (ESP32) {#apendice:codigo}
+## Apêndice
+# Código Fonte do Firmware (ESP32)
 
 Abaixo apresenta-se o código completo desenvolvido em C++
 (PlatformIO/Arduino) utilizado na simulação.
