@@ -1,5 +1,4 @@
-# Parte 1 - Caracterização de Sistemas Embarcados {#parte-1---caracterização-de-sistemas-embarcados .unnumbered}
-
+# Parte 1 - Caracterização de Sistemas Embarcados
 De inicio, escolhemos o produto Tomada Inteligente Wi-Fi (Smart Plug),
 de modelo Sonoff S26, cujo segmento é o de automação residencial ou IoT.
 
@@ -272,7 +271,6 @@ void TaskLerBotao(void *pvParameters) {
 ```
 
 ::: thebibliography
-9
 
 M. Karpagam, S. S. Sahana, S. Sivadharini and S. Soundhariyasri, "Smart
 Energy Meter and Monitoring System using Internet of Things (IoT),"
