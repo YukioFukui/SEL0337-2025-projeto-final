@@ -8,26 +8,33 @@ de modelo Sonoff S26, cujo segmento é o de automação residencial ou IoT.
 Este dispositivo destaca-se pela simplicidade de hardware e baixo custo,
 sendo amplamente documentado pela comunidade de IoT.
 
-  **Característica**              **Detalhamento Técnico**
-  ------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  **Unidade de Processamento**    **SoC (System on Chip):** ESP8266. Integra MCU de 32-bit e rádio Wi-Fi. **Clock:** 80 MHz.
-  **Memória**                     **Flash:** 1 MB ou 2 MB para firmware e sistema de arquivos. **RAM:** 50 KB (SRAM).
-  **Sistema Operacional**         **RTOS / SDK:** Roda um firmware baseado no FreeRTOS para gerenciar o Wi-Fi e TCP/IP.
-  **Interfaces de Comunicação**   **Sem Fio:** Wi-Fi 802.11 (2.4 GHz). **Com Fio:** Possui pinos internos de UART (TX/RX) acessíveis na placa para gravação de firmware, mas não expostos ao usuário final.
-  **Sensores**                    **Botão Físico:** Um botão conectado a uma GPIO para acionamento manual ou modo de pareamento.
-  **Atuadores**                   **Relé Eletromecânico:** 10A/250V acionado via GPIO (transistor) para controlar a carga da tomada. **LEDs:** Indicador de estado (Wi-Fi/Ligado).
-  **Alimentação**                 Fonte interna AC/DC que converte 110/220V da rede para 5V e 3.3V DC para alimentar o SoC e o Relé.
+  **Característica e Detalhamento Técnico**
+  
+  *Unidade de Processamento*    *SoC (System on Chip):* ESP8266. Integra MCU de 32-bit e rádio Wi-Fi. Clock: 80 MHz.
+  
+  *Memória*                     *Flash:* 1 MB ou 2 MB para firmware e sistema de arquivos. RAM: 50 KB (SRAM).
+  
+  *Sistema Operacional*        *RTOS / SDK:* Roda um firmware baseado no FreeRTOS para gerenciar o Wi-Fi e TCP/IP.
+  
+  *Interfaces de Comunicação*   *Sem Fio:* Wi-Fi 802.11 (2.4 GHz). *Com Fio:* Possui pinos internos de UART (TX/RX) acessíveis na placa para gravação de firmware, mas não expostos ao usuário final.
+  
+  *Sensores*                    *Botão Físico:* Um botão conectado a uma GPIO para acionamento manual ou modo de pareamento.
+  
+  *Atuadores*                   *Relé Eletromecânico:* 10A/250V acionado via GPIO (transistor) para controlar a carga da tomada. *LEDs:* Indicador de estado (Wi-Fi/Ligado).
+  
+  *Alimentação*                 Fonte interna AC/DC que converte 110/220V da rede para 5V e 3.3V DC para alimentar o SoC e o Relé.
+  
+<img width="479" height="492" alt="sonoff" src="https://github.com/user-attachments/assets/a934814e-7f29-4973-8bbd-7c3c3585e430" />
 
-  : Especificações Técnicas do Smart Plug Sonoff
 
-![Produto Escolhido - Sonoff S26](sonoff.png){#fig:placeholder
-width="40%"}
+[Produto Escolhido - Sonoff S26]
+
 
 # Validação Científica
 
 ## Artigo 1: Tecnologia (Medição e Monitoramento IoT)
 
-Este artigo [@ref1] apresenta o desenvolvimento de um medidor de energia
+A referência 1 apresenta o desenvolvimento de um medidor de energia
 inteligente utilizando a integração entre Arduino e o módulo Wi-Fi
 ESP8266 (similar ao utilizado na tomada inteligente deste projeto). O
 estudo utiliza sensores de corrente e a plataforma IoT Blynk para
@@ -52,12 +59,12 @@ típica de ambientes domésticos.
 
 ## Artigo 2: Aplicação (Controle Residencial)
 
-Este trabalho [@ref2] foca na implementação prática de um Smart Plug
+O trabalho da referência 2 foca na implementação prática de um Smart Plug
 para controle remoto de eletrodomésticos via aplicativo Android. O
 estudo aborda a integração do hardware (relé e módulo Wi-Fi) com
 servidores em nuvem, demonstrando a eficiência do acionamento remoto
 para reduzir o consumo de energia de dispositivos que ficam em
-\"stand-by\".
+"stand-by".
 
 **Crítica**
 
@@ -77,7 +84,7 @@ Minha pergunta aos autores seria como o smart plug se comporta em
 situações de perda ou instabilidade de conexão, já que isso impacta
 diretamente a usabilidade do dispositivo.
 
-# Parte 2 - Abordagem do Desenvolvimento {#parte-2---abordagem-do-desenvolvimento .unnumbered}
+# Parte 2 - Abordagem do Desenvolvimento
 
 Nesta etapa, analisamos um possível desenvolvimento para o produto
 escolhido, a Tomada Inteligente Wi-Fi.
@@ -98,7 +105,7 @@ recursos computacionais.
 
 Quanto aos CoM, ou Módulos industriais, ainda seriam caros demais para o
 mercado doméstico. Logo, projetar a placa do zero, dedicada com o SoC
-ESP8266/ESP32 é a única opção viável. O chip custa menos de \$1 USD.
+ESP8266/ESP32 é a única opção viável. O chip custa menos de $1 USD.
 
 ## Risco
 
@@ -110,14 +117,14 @@ software, não sendo necessário criar protocolos de rede Wi-Fi do zero.
 Por isso, na prática, apenas uma placa dedicada mantém o produto dentro
 do preço competitivo que ele tem hoje no mercado.
 
-# Parte 3 - Implementação {#parte-3---implementação .unnumbered}
+# Parte 3 - Implementação
 
 # Descrição
 
 Para a prática final, foi desenvolvido um firmware simulando o
 funcionamento da Tomada Inteligente caracterizada na Parte 1. O objetivo
 foi demonstrar o uso do sistema operacional de tempo real **FreeRTOS**
-operando em modo *Dual-Core* na ESP32.
+operando em modo *Dual-Core* da ESP32.
 
 Ora, sendo assim, sistema divide-se em duas Tasks concorrentes:
 
@@ -160,19 +167,19 @@ DevKit V1:
 
 # Resultados da Simulação
 
-O código foi feito no Wokwi. A Figura
-[2](#fig:resultado){reference-type="ref" reference="fig:resultado"}
+O código foi feito no Wokwi. A figura abaixo
 demonstra o funcionamento:
-
 -   O **Core 1** mantém o loop de monitoramento ativo, imprimindo o
     status \"Tomada LIGADA\" periodicamente.
 
 -   O **Core 0** intercepta o pressionamento do botão simultaneamente,
     exibe a mensagem de interrupção e altera o estado do sistema.
+    
+<img width="538" height="595" alt="image" src="https://github.com/user-attachments/assets/10798766-a4a8-4d84-8837-70f0138e186f" />
 
 ![Log do Monitor Serial comprovando a execução Multicore: O Core 0
 processa o botão enquanto o Core 1 mantém o status do sistema
-ativo.](image.png){#fig:resultado width="100%"}
+ativo.]
 
 # Conclusão da Prática
 
