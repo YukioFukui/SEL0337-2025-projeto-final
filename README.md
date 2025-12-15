@@ -139,12 +139,11 @@ As tarefas foram alocadas em núcleos físicos distintos para garantir que
 o processamento da interface humana não bloqueie o controle crítico da
 carga.
 
-  **Nome da Task**    **Prioridade**   **Núcleo**  **Função**
-  ------------------ ---------------- ------------ ----------------------------------
-  `Task_Hardware`        Alta (2)        Core 1    Controle do Relé (LED) e Status.
-  `Task_Botao`          Baixa (1)        Core 0    Leitura do botão do usuário.
-
-  : Alocação de Recursos e Prioridades
+ *Nome da Task* - *Prioridade* - *Núcleo* - *Função*:
+ 
+  `Task_Hardware`- Alta (2) - Core 1 - Controle do Relé (LED) e Status.
+  
+  `Task_Botao` - Baixa (1) - Core 0 - Leitura do botão do usuário.
 
 Utilizou-se a função `xTaskCreatePinnedToCore` para fixar a
 *Task_Hardware* no núcleo 1 (Application Core) e a *Task_Botao* no
