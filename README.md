@@ -119,65 +119,45 @@ do preço competitivo que ele tem hoje no mercado.
 
 # Descrição
 
-Para a prática final, foi desenvolvido um firmware simulando o
-funcionamento da Tomada Inteligente caracterizada na Parte 1. O objetivo
-foi demonstrar o uso do sistema operacional de tempo real **FreeRTOS**
-operando em modo *Dual-Core* da ESP32.
+Esta prática visa experimentar com a implementação do RTOS (Real Time Operational System), uma ferramenta muito útil para o processamento paralelo de tarefas.
 
-Ora, sendo assim, sistema divide-se em duas Tasks concorrentes:
+Para a parte I foi desenvolvido um código para detecção de toques por meio do pino capacitivo da ESP32 para ligar um LED, o processo para tal foi feito como uma task atribuída ao núcleo 1 do processador.
 
--   **Task de Hardware (Atuador):** Controla a carga (LED/Relé) e simula
-    o monitoramento de consumo.
+Para a parte II foi desenvolvido um código para o controle da posição de um servo-motor por meio de uma entrada analógica comandada por um potênciometro, além disso, para a visualização dos comandos foi utilizado um display LCD. Em paralelo ao controle da posição do motor, haverá um outro processo que irá acender um LED vermelho para caso o motor esteja em movimento e, caso o contrário, um LED verde irá acender. Isso é feito por meio de uma flag no processo de controle que dita se o motor está ou não se movimentando, daí o segundo processo lê essa flag para decidir qual LED acender, para tal foi implementado a funcionalidade de Mutex. Esta parte junta conceitos como: bibliotecas para servo motores, comunicação serial com diplay LCD e RTOS.
 
--   **Task de Interface (Sensor):** Lê o botão físico de acionamento
-    manual de forma assíncrona.
+O código da parte 1 se encontra em: /pratica6_proj_embark/Pratica6_parte1/Codigo_pt1
+O diagrama do circuito da parte 1 se encontra em: /pratica6_proj_embark/Pratica6_parte1/diagrama_pt1.json
 
-# Implementação e Configuração do FreeRTOS
+O código da parte 2 se encontra em: /pratica6_proj_embark/Pratica6_parte2/src/Codigo_pt2
+O diagrama do circuito da parte 1 se encontra em: /pratica6_proj_embark/Pratica6_parte2/diagrama_pt2.json
 
-A principal vantagem explorada foi a arquitetura assimétrica da ESP32.
-As tarefas foram alocadas em núcleos físicos distintos para garantir que
-o processamento da interface humana não bloqueie o controle crítico da
-carga.
+Recomenda-se copiar e colar esses códigos deste projeto dentro dos arquivos equivalentes de um projeto de simulação no Wokwi.
 
- *Nome da Task* - *Prioridade* - *Núcleo* - *Função*:
- 
-  `Task_Hardware`- Alta (2) - Core 1 - Controle do Relé (LED) e Status.
-  
-  `Task_Botao` - Baixa (1) - Core 0 - Leitura do botão do usuário.
+# Resultados da Parte 1
+Na parte 1 da pratica foi implementado um detector de toque por meio dos pinos capacitivos da ESP32, um LED é utilizado para avaliar se houve ou não um toque. Contudo, como o programa foi desenvolvido no ambiente de Simulação WOKWI, foi utilizado um botão para simular o toque. O processo para esta parte foi implementado como uma task para ser executada pelo núcleo 1. Abaixo há imagens do funcionamento do programa:
 
-Utilizou-se a função `xTaskCreatePinnedToCore` para fixar a
-*Task_Hardware* no núcleo 1 (Application Core) e a *Task_Botao* no
-núcleo 0 (Protocol Core). A comunicação entre elas ocorre através de uma
-variável de estado compartilhada (*volatile*), sendo assim a resposta ao
-comando de quem utiliza o equipamento é praticamente imediata.
+<img width="581" height="442" alt="image" src="https://github.com/user-attachments/assets/88c3546c-2c06-44cb-80eb-f837dd4aa666" />
 
-# Diagrama Esquemático Simplificado
+*Não há toque, logo o LED está desligado*
 
-A montagem no simulador Wokwi utilizou a pinagem padrão da placa ESP32
-DevKit V1:
+<img width="602" height="432" alt="image" src="https://github.com/user-attachments/assets/0339bd96-ffca-4aa8-86ae-829d870050c3" />
 
--   **GPIO 2 (Saída):** Conectado ao LED Onboard (Simulando o
-    acionamento do Relé).
+*Foi detectado um toque*
 
--   **GPIO 13 (Entrada):** Conectado ao Pushbutton (Configurado em modo
-    *Input Pull-up*).
+# Resultados da Parte 2
+Abaixo segue um esquema da montagem:
 
-# Resultados da Simulação
+<img width="690" height="446" alt="image" src="https://github.com/user-attachments/assets/58ff7a45-749a-4165-b706-7402aa489847" />
 
-O código foi feito no Wokwi. A figura abaixo
-demonstra o funcionamento:
--   O **Core 1** mantém o loop de monitoramento ativo, imprimindo o
-    status \"Tomada LIGADA\" periodicamente.
+Exemplo de funcionamento - Motor em movimento:
+<img width="576" height="451" alt="image" src="https://github.com/user-attachments/assets/981ec6ac-ffc0-4b2f-b852-b733ded5a294" />
 
--   O **Core 0** intercepta o pressionamento do botão simultaneamente,
-    exibe a mensagem de interrupção e altera o estado do sistema.
-    
-<img width="538" height="595" alt="image" src="https://github.com/user-attachments/assets/10798766-a4a8-4d84-8837-70f0138e186f" />
+*Como o motor não está no angulo de referência, ele está movimento e então o LED vermelho está aceso*
 
-![Log do Monitor Serial comprovando a execução Multicore: O Core 0
-processa o botão enquanto o Core 1 mantém o status do sistema
-ativo.]
+Exemplo de funcionamento - Motor em posição:
+<img width="662" height="445" alt="image" src="https://github.com/user-attachments/assets/b987558f-8372-4de8-ba65-3656c23ff18b" />
 
+*Como o motor está no angulo de referência, ele está parado e então o LED verde está aceso*
 # Conclusão da Prática
 
 A implementação comprovou que o uso de RTOS permite desacoplar a lógica
@@ -269,7 +249,7 @@ void TaskLerBotao(void *pvParameters) {
 }
 ```
 
-::: thebibliography
+
 
 M. Karpagam, S. S. Sahana, S. Sivadharini and S. Soundhariyasri, "Smart
 Energy Meter and Monitoring System using Internet of Things (IoT),"
