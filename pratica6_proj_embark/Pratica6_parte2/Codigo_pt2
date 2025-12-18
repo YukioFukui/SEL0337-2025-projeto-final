@@ -7,15 +7,15 @@
 
 // VARIAVEIS GLOBAIS
 
-int valorADC = 0;
-int valorDAC = 0;
+int valorADC = 0; // valor da leitura analógica
+int valorDAC = 0; // valor da conversao analógica para digital
 int angulo = 0; //  angulo atual do servo
 int incremento = 2; // Incremento para o movimento do servo
-int AnguloAnterior = -1;
+int AnguloAnterior = -1; // variaveis temporarias para angulo e DAC
 int DACanterior = -1;
-bool movimento = false;
+bool movimento = false; //flag de movimento
 
-SemaphoreHandle_t mutex;
+SemaphoreHandle_t mutex; //handler de semaforo mutex
 
 // --- CONFIG LCD-----
 // Endereço I2C do display LCD
@@ -71,7 +71,7 @@ void vTask1(void *pvParameters){
   while(1){
     if(xSemaphoreTake(mutex, portMAX_DELAY) == pdTRUE){
 
-    if (movimento == true) { // lógica para acender o LED onboard quando o pino13 for tocado
+    if (movimento == true) { // lógica para verificar movimento
     digitalWrite(14, HIGH); // se sim, acende o LED vermelho
     digitalWrite(12, LOW); // se sim, apaga o LED verde
     }
