@@ -1,0 +1,135 @@
+#include <Arduino.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/semphr.h"
+#include <LiquidCrystal_I2C.h> // LCD no modo serial I2C
+#include <ESP32Servo.h> //biblioteca para controle de servo motores
+
+// VARIAVEIS GLOBAIS
+
+int valorADC = 0;
+int valorDAC = 0;
+int angulo = 0; //  angulo atual do servo
+int incremento = 2; // Incremento para o movimento do servo
+int AnguloAnterior = -1;
+int DACanterior = -1;
+bool movimento = false;
+
+SemaphoreHandle_t mutex;
+
+// --- CONFIG LCD-----
+// Endereço I2C do display LCD
+const int lcdAddress = 0x27;
+// Número de colunas e linhas do display LCD
+const int lcdColumns = 16;
+const int lcdRows = 1;
+
+// Inicialização do display LCD
+LiquidCrystal_I2C lcd(lcdAddress, lcdColumns, lcdRows); //objeto lcd da classe LiquidCrystal_I2C parametrizado
+
+// --- TASKS ---
+void vTask1(void *pvParameters);
+void vTask2(void *pvParameters);
+
+// ---- MOTOR
+Servo Motor; //Motor, objeto da classe servo
+
+// SETUP
+void setup()
+{
+  pinMode(15, INPUT);
+
+  pinMode(14, OUTPUT); // pino correspondente ao LED vermelho como saída
+  digitalWrite(14, LOW); // inicialmente desligado (LED vermelho apagado)
+
+  pinMode(12, OUTPUT); // pino correspondente ao LED verde como saída
+  digitalWrite(12, LOW); // inicialmente desligado (LED verde apagado)
+
+  Serial.begin(9600); // taxa de transferência serial (baud rate) = 115200 bits por segundo (bps)
+
+  lcd.init(); //inicialização do display
+  lcd.backlight(); //liga a backlight do display
+
+
+  Motor.setPeriodHertz(50);  // Define a frequência do servo para 50Hz
+  Motor.attach(4, 500, 2500);  // Conecta o servo ao pino 4 com pulsos de 500us a 2500us
+
+  mutex = xSemaphoreCreateMutex(); //mutex
+
+  xTaskCreatePinnedToCore(vTask1, "LED", 2048, NULL, 5, NULL, 1);
+  xTaskCreatePinnedToCore(vTask2, "trimpot", 4196, NULL, 1, NULL, 0);
+
+}
+
+ // loop
+void loop(){
+  vTaskDelay(1000);
+
+} 
+
+void vTask1(void *pvParameters){
+  while(1){
+    if(xSemaphoreTake(mutex, portMAX_DELAY) == pdTRUE){
+
+    if (movimento == true) { // lógica para acender o LED onboard quando o pino13 for tocado
+    digitalWrite(14, HIGH); // se sim, acende o LED vermelho
+    digitalWrite(12, LOW); // se sim, apaga o LED verde
+    }
+
+    else {
+    digitalWrite(14, LOW); // caso contrário, o LED vermelho permanece apagado
+    digitalWrite(12, HIGH); // caso contrário, ascende o LED verde
+    }
+    xSemaphoreGive(mutex);
+    }
+    vTaskDelay(pdMS_TO_TICKS(500));
+  }
+}
+
+void vTask2(void *pvParameters){
+  while(1){
+
+    if(xSemaphoreTake(mutex, portMAX_DELAY) == pdTRUE){
+
+    valorADC = analogRead(15);
+    valorDAC = map(valorADC,0,4095,0,180);
+
+    Motor.write(angulo); //o motor recebe o valor do angulo atual
+
+    if (angulo == valorDAC){ //se o angulo atual do motor é igual ao desejado nada acontece
+      movimento = false;
+    }
+    
+    else if (angulo > valorDAC) {  //se o angulo atual do motor é maior que o desejado ele é reduzido
+        angulo -= incremento;
+        movimento = true;   
+      }
+    else if (angulo < valorDAC){ //se o angulo atual do motor é menor que o desejado ele é aumentado
+        angulo +=incremento;
+        movimento = true;
+    }
+    vTaskDelay(pdMS_TO_TICKS(500));
+
+    if (angulo != AnguloAnterior || valorDAC != DACanterior) { //mudança dos valores mostrados pelos displays
+
+      lcd.setCursor(0, 0);
+      lcd.print("angulo atual: ");
+      lcd.print("     ");
+      lcd.setCursor(13, 0);
+      lcd.print(angulo);
+
+
+      lcd.setCursor(0, 1);
+      lcd.print("angulo ref: ");
+      lcd.print("     ");
+      lcd.setCursor(11, 1);
+      lcd.print(valorDAC);
+
+      AnguloAnterior = angulo;
+      DACanterior= valorDAC;
+      }
+    xSemaphoreGive(mutex);
+    }
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+}
