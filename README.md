@@ -118,12 +118,13 @@ do preço competitivo que ele tem hoje no mercado.
 # Parte 3 - Implementação
 
 # Descrição
-
+O uso do RTOS para desenvolver um programa que utiliza processamento paralelo difere do uso de um sistema operacional de uso geral devido a peculiaridade do RTOS conseguir reproduzir cada tarefa em intervalos de tempo determinados, enquanto que outras OS's reproduzem em intervalos de tempo inderteminados. Isso ocorre, pois o RTOS é otimizado para desenvolvimentos de sistemas em tempo real. Portanto, o RTOS executa processos em tempos determinados, enquanto que o Linux por exemplo executa de maneira imprevisível.  
 Esta prática visa experimentar com a implementação do RTOS (Real Time Operational System), uma ferramenta muito útil para o processamento paralelo de tarefas.
 
 Para a parte I foi desenvolvido um código para detecção de toques por meio do pino capacitivo da ESP32 para ligar um LED, o processo para tal foi feito como uma task atribuída ao núcleo 1 do processador.
 
 Para a parte II foi desenvolvido um código para o controle da posição de um servo-motor por meio de uma entrada analógica comandada por um potênciometro, além disso, para a visualização dos comandos foi utilizado um display LCD. Em paralelo ao controle da posição do motor, haverá um outro processo que irá acender um LED vermelho para caso o motor esteja em movimento e, caso o contrário, um LED verde irá acender. Isso é feito por meio de uma flag no processo de controle que dita se o motor está ou não se movimentando, daí o segundo processo lê essa flag para decidir qual LED acender, para tal foi implementado a funcionalidade de Mutex. Esta parte junta conceitos como: bibliotecas para servo motores, comunicação serial com diplay LCD e RTOS.
+O processo para o controle do motor é de prioridade 1 e está designado ao núcleo 0, o processo para os LEDs é de prioridade 5 e está designado para o núcleo 1.
 
 O código da parte 1 se encontra em: /pratica6_proj_embark/Pratica6_parte1/Codigo_pt1
 O diagrama do circuito da parte 1 se encontra em: /pratica6_proj_embark/Pratica6_parte1/diagrama_pt1.json
@@ -160,11 +161,7 @@ Exemplo de funcionamento - Motor em posição:
 *Como o motor está no angulo de referência, ele está parado e então o LED verde está aceso*
 # Conclusão da Prática
 
-A implementação comprovou que o uso de RTOS permite desacoplar a lógica
-de leitura de sensores da lógica de atuação. Diferente de uma abordagem
-linear ou tradicional, onde um delay de *debounce* no botão travaria
-todo o sistema, a abordagem com Tasks permitiu que o sistema continuasse
-responsivo e operando em paralelo nos dois núcleos da ESP32.
+O uso do RTOS em ambiente de simulação permite concluir que é possível utilizá-lo para o processamento de dois processos que compartilham recursos entre-si.
 
 ## Apêndice
 # Código Fonte do Firmware (ESP32)
