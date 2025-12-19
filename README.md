@@ -123,7 +123,7 @@ Esta prática visa experimentar com a implementação do RTOS (Real Time Operati
 
 Para a parte I foi desenvolvido um código para detecção de toques por meio do pino capacitivo da ESP32 para ligar um LED, o processo para tal foi feito como uma task atribuída ao núcleo 1 do processador.
 
-Para a parte II foi desenvolvido um código para o controle da posição de um servo-motor por meio de uma entrada analógica comandada por um potênciometro, além disso, para a visualização dos comandos foi utilizado um display LCD. Em paralelo ao controle da posição do motor, haverá um outro processo que irá acender um LED vermelho para caso o motor esteja em movimento e, caso o contrário, um LED verde irá acender. Isso é feito por meio de uma flag no processo de controle que dita se o motor está ou não se movimentando, daí o segundo processo lê essa flag para decidir qual LED acender, para tal foi implementado a funcionalidade de Mutex. Esta parte junta conceitos como: bibliotecas para servo motores, comunicação serial com diplay LCD e RTOS.
+Para a parte II foi desenvolvido um código para o controle da posição de um servo-motor por meio de uma entrada analógica comandada por um potênciometro, além disso, para a visualização dos comandos foi utilizado um display LCD. Em paralelo ao controle da posição do motor, haverá um outro processo que irá acender um LED vermelho para caso o motor esteja em movimento e, caso o contrário, um LED verde irá acender. Isso é feito por meio de uma flag no processo de controle que dita se o motor está ou não se movimentando, daí o segundo processo lê essa flag para decidir qual LED acender, para tal foi implementado a funcionalidade de Mutex. Esta parte junta conceitos como: bibliotecas para servo motores, comunicação serial com diplay LCD e RTOS.
 O processo para o controle do motor é de prioridade 1 e está designado ao núcleo 0, o processo para os LEDs é de prioridade 5 e está designado para o núcleo 1.
 
 O código da parte 1 se encontra em: /pratica6_proj_embark/Pratica6_parte1/Codigo_pt1
@@ -159,9 +159,12 @@ Exemplo de funcionamento - Motor em posição:
 <img width="662" height="445" alt="image" src="https://github.com/user-attachments/assets/b987558f-8372-4de8-ba65-3656c23ff18b" />
 
 *Como o motor está no angulo de referência, ele está parado e então o LED verde está aceso*
+
+O controle de posição e o sistema com LEDs agiram como esperado.
+
 # Conclusão da Prática
 
-O uso do RTOS em ambiente de simulação permite concluir que é possível utilizá-lo para o processamento de dois processos que compartilham recursos entre-si.
+O uso do RTOS em ambiente de simulação permite concluir que é possível utilizá-lo para o processamento de dois processos que compartilham recursos entre-si de maneira que o sistema seja em tempo real. Validando assim o uso do multiprocessamento do RTOS ao invés do uso de multiprocessamentos de outros OS's desenvolvidos para uso geral
 
 ## Apêndice
 # Código Fonte do Firmware (ESP32)
