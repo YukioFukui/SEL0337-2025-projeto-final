@@ -166,7 +166,7 @@ O controle de posição e o sistema com LEDs agiram como esperado.
 
 O uso do RTOS em ambiente de simulação permite concluir que é possível utilizá-lo para o processamento de dois processos que compartilham recursos entre-si de maneira que o sistema seja em tempo real. Validando assim o uso do multiprocessamento do RTOS ao invés do uso de multiprocessamentos de outros OS's desenvolvidos para uso geral
 
-## Apêndice
+
 # Referencias
 
 M. Karpagam, S. S. Sahana, S. Sivadharini and S. Soundhariyasri, "Smart
